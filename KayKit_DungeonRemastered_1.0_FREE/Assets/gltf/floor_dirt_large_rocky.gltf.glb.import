@@ -1,0 +1,43 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://bwj8kfit2tghm"
+path="res://.godot/imported/floor_dirt_large_rocky.gltf.glb-f4ec9e5ec7ae9abf584983e9fd57084e.scn"
+
+[deps]
+
+source_file="res://KayKit_DungeonRemastered_1.0_FREE/Assets/gltf/floor_dirt_large_rocky.gltf.glb"
+dest_files=["res://.godot/imported/floor_dirt_large_rocky.gltf.glb-f4ec9e5ec7ae9abf584983e9fd57084e.scn"]
+
+[params]
+
+nodes/root_type=""
+nodes/root_name=""
+nodes/apply_root_scale=true
+nodes/root_scale=1.0
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=1
+meshes/lightmap_texel_size=0.2
+meshes/force_disable_compression=false
+skins/use_named_skins=true
+animation/import=true
+animation/fps=30
+animation/trimming=false
+animation/remove_immutable_tracks=true
+import_script/path=""
+_subresources={
+"nodes": {
+"PATH:floor_dirt_large_rocky": {
+"generate/physics": true,
+"physics/shape_type": 3,
+"primitive/position": Vector3(0, -0.04, 0),
+"primitive/size": Vector3(4, 0.125, 4)
+}
+}
+}
+gltf/naming_version=1
+gltf/embedded_image_handling=1

@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://dxhupiv4qym25"]
+
+[ext_resource type="PackedScene" uid="uid://dc1lw21htgtjw" path="res://KayKit_DungeonRemastered_1.0_FREE/Assets/gltf/torch.gltf.glb" id="1_quokr"]
+
+[node name="WallTorch" type="Node3D"]
+
+[node name="torch_gltf" parent="." instance=ExtResource("1_quokr")]
+transform = Transform3D(0.918646, -0.395081, 0, 0.395081, 0.918646, 0, 0, 0, 1, 1.52095, 2.13571, 0.173686)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="torch_gltf"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00772953, 0.803575, 0)
+light_color = Color(0.980392, 0.458824, 0, 1)
+shadow_enabled = true
+distance_fade_begin = 1656.84
+distance_fade_shadow = 2671.23
+distance_fade_length = 1899.72
+omni_range = 17.927
+omni_attenuation = 1.46409

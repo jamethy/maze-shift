@@ -1,0 +1,56 @@
+[gd_scene load_steps=3 format=3 uid="uid://b6bgxihd4ny0c"]
+
+[ext_resource type="PackedScene" uid="uid://gxrvh10rb6av" path="res://KayKit_DungeonRemastered_1.0_FREE/Assets/gltf/wall.gltf.glb" id="1_gwoaf"]
+[ext_resource type="PackedScene" uid="uid://os2elo43s4kk" path="res://KayKit_DungeonRemastered_1.0_FREE/Assets/gltf/floor_dirt_large.gltf.glb" id="2_mnlxj"]
+
+[node name="Hallway" type="Node3D"]
+
+[node name="wall_gltf21" parent="." instance=ExtResource("1_gwoaf")]
+transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, -2, 0, 0)
+
+[node name="floor_dirt_large_gltf2" parent="." instance=ExtResource("2_mnlxj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+
+[node name="floor_dirt_large_gltf3" parent="." instance=ExtResource("2_mnlxj")]
+
+[node name="floor_dirt_large_gltf8" parent="." instance=ExtResource("2_mnlxj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
+
+[node name="wall_gltf22" parent="." instance=ExtResource("1_gwoaf")]
+transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, -2, 4, 0)
+
+[node name="wall_gltf23" parent="." instance=ExtResource("1_gwoaf")]
+transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, -2, 0, 4)
+
+[node name="wall_gltf24" parent="." instance=ExtResource("1_gwoaf")]
+transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, -2, 4, 4)
+
+[node name="wall_gltf25" parent="." instance=ExtResource("1_gwoaf")]
+transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, 2, 0, 4)
+
+[node name="wall_gltf26" parent="." instance=ExtResource("1_gwoaf")]
+transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, 2, 4, 4)
+
+[node name="wall_gltf27" parent="." instance=ExtResource("1_gwoaf")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, -2)
+
+[node name="wall_gltf28" parent="." instance=ExtResource("1_gwoaf")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 4, -2)
+
+[node name="wall_gltf29" parent="." instance=ExtResource("1_gwoaf")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 4, 0, 2)
+
+[node name="wall_gltf30" parent="." instance=ExtResource("1_gwoaf")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 4, 4, 2)
+
+[node name="wall_gltf31" parent="." instance=ExtResource("1_gwoaf")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 4, 0, -2)
+
+[node name="wall_gltf32" parent="." instance=ExtResource("1_gwoaf")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 4, 4, -2)
+
+[node name="wall_gltf33" parent="." instance=ExtResource("1_gwoaf")]
+transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, 6, 4, 0)
+
+[node name="wall_gltf34" parent="." instance=ExtResource("1_gwoaf")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 4, 6)
