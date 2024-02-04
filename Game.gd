@@ -13,13 +13,12 @@ class Hallway:
 	var b: Room
 	
 
-var maze_map = {
-	
-}
+var maze_map = {}
 
 var basic_room = preload("res://BasicRoom.tscn")
 var hallway_scene = preload("res://Hallway.tscn")
 var room_w = 12
+var room_id_counter: int = 1
 
 
 func _ready():
@@ -28,11 +27,11 @@ func _ready():
 	
 	add_rooms(r)
 	
-	
 	$Barbarian.position = r.node.position
 
 
 func add_rooms(r: Room):
+	print("adding rooms to room ", r.node.room_id)
 	var options = []
 	if not r.negative_x and can_place_hallway(r, -1, 0):
 		options.append(1)
@@ -56,6 +55,7 @@ func add_rooms(r: Room):
 				r.node.position.x - room_w,
 				r.node.position.z,
 			)
+			connect_hallyway_to_on_entered(hallway)
 			hallway.a = r
 			r.negative_x = hallway
 			r.node.set_door_negative_x(true)
@@ -92,6 +92,7 @@ func add_rooms(r: Room):
 				r.node.position.x,
 				r.node.position.z - room_w,
 			)
+			connect_hallyway_to_on_entered(hallway)
 			hallway.a = r
 			r.negative_z = hallway
 			r.node.set_door_negative_z(true)
@@ -103,20 +104,16 @@ func add_rooms(r: Room):
 				else:
 					can_go_right = false
 			if can_go_left:
-				# door facing negative x
-				# door facing positive z
-				print("out of -z can go left")
 				hallway.node.rotation_degrees.y = -90
 				
 				var room = add_room(
 					r.node.position.x - room_w,
 					r.node.position.z - room_w,
 				)
-				room.negative_z = hallway
-				room.node.set_door_negative_z(true)
+				room.positive_x = hallway
+				room.node.set_door_positive_x(true)
 				hallway.b = room
 			else:
-				print("out of -z can go right")
 				# no rotation
 				var room = add_room(
 					r.node.position.x + room_w,
@@ -132,6 +129,7 @@ func add_rooms(r: Room):
 				r.node.position.x + room_w,
 				r.node.position.z,
 			)
+			connect_hallyway_to_on_entered(hallway)
 			hallway.a = r
 			r.positive_x = hallway
 			r.node.set_door_positive_x(true)
@@ -170,6 +168,7 @@ func add_rooms(r: Room):
 				r.node.position.x,
 				r.node.position.z + room_w,
 			)
+			connect_hallyway_to_on_entered(hallway)
 			hallway.a = r
 			r.positive_z = hallway
 			r.node.set_door_positive_z(true)
@@ -237,13 +236,16 @@ func add_room(x, z):
 	if z in maze_map[x]:
 		print("already a room here ", x, ", ", z)
 		return maze_map[x][z]
-		return
 	
 	var room_obj = basic_room.instantiate()
+	room_obj.name = 'Room%d' % room_id_counter
+	room_obj.room_id = room_id_counter
+	room_id_counter += 1
 	room_obj.position.x = x
 	room_obj.position.z = z
 	var room = Room.new()
 	room.node = room_obj
+	room_obj.get_node("Area3D").body_entered.connect(on_room_entered.bind(room))
 	maze_map[x][z] = room
 	add_child(room.node)
 	return room
@@ -258,9 +260,32 @@ func add_hallway(x, z):
 	
 	var hallway_obj = hallway_scene.instantiate()
 	hallway_obj.position.x = x
-	hallway_obj.position.z = z	
+	hallway_obj.position.z = z
 	var h = Hallway.new()
 	h.node = hallway_obj
 	maze_map[x][z] = h
 	add_child(h.node)
 	return h
+
+
+func connect_hallyway_to_on_entered(hallway: Hallway):
+	hallway.node.get_node("Area3D").body_entered.connect(on_hallway_entered.bind(hallway))
+
+
+func on_hallway_entered(body: Barbarian, hallway: Hallway):
+	print("hallway entered")
+	var room_ahead: Room
+	if body.current_room_id == hallway.a.node.room_id:
+		room_ahead = hallway.b
+	else:
+		room_ahead = hallway.a
+	if room_ahead.node.door_count() == 1:
+		add_rooms(room_ahead)
+	else:
+		print("already has doors")
+	
+	
+func on_room_entered(body: Barbarian, room: Room):
+	body.current_room_id = room.node.room_id
+	
+	

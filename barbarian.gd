@@ -7,6 +7,7 @@ class_name Barbarian
 @export var rotation_speed = 12.0
 @export var mouse_sensitivity = 0.0015
 
+var current_room_id: int = 0
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bm3ecd506ivdh"]
+[gd_scene load_steps=13 format=3 uid="uid://bm3ecd506ivdh"]
 
 [ext_resource type="Script" path="res://root.gd" id="1_bviar"]
 [ext_resource type="PackedScene" uid="uid://cg6i26ku8bf33" path="res://KayKit_DungeonRemastered_1.0_FREE/Assets/gltf/chest.glb" id="1_w8y02"]
@@ -20,6 +20,9 @@ ambient_light_color = Color(0.505882, 0.505882, 0.380392, 1)
 ambient_light_energy = 0.02
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_lysf3"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8wepn"]
+size = Vector3(4, 1, 5)
 
 [node name="Root" type="Node3D"]
 script = ExtResource("1_bviar")
@@ -141,3 +144,9 @@ transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 12, 0,
 [node name="BasicRoom" parent="." instance=ExtResource("8_id61e")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, -12)
 door_positive_z = true
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 1, -1)
+shape = SubResource("BoxShape3D_8wepn")
