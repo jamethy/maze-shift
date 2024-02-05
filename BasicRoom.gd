@@ -9,6 +9,21 @@ class_name BasicRoom
 
 var room_id: int
 
+func set_door(dir: Vector3, open: bool):
+	var door_node: Node
+	
+	if roundi(dir.x) == 1:
+		door_node = $wall_positive_x
+	elif roundi(dir.x) == -1:
+		door_node = $wall_negative_x
+	elif roundi(dir.z) == 1:
+		door_node = $wall_positive_z
+	elif roundi(dir.z) == -1:
+		door_node = $wall_negative_z
+	door_node.visible = !open
+	door_node.get_node("wall/StaticBody3D/CollisionShape3D").disabled = open
+	door_node.position.y = 4 if open else 0
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	$wall_negative_x.visible = !door_negative_x
@@ -48,12 +63,12 @@ func set_door_positive_z(b: bool):
 
 func door_count() -> int:
 	var c = 0
-	if door_negative_x:
+	if $wall_negative_x.position.y == 4:
 		c += 1
-	if door_negative_z:
+	if $wall_negative_z.position.y == 4:
 		c += 1
-	if door_positive_x:
+	if $wall_positive_x.position.y == 4:
 		c += 1
-	if door_positive_z:
+	if $wall_positive_z.position.y == 4:
 		c += 1
 	return c
