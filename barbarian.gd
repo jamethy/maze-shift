@@ -7,6 +7,7 @@ class_name Barbarian
 @export var rotation_speed = 12.0
 @export var mouse_sensitivity = 0.0015
 
+var player_id: int = 1
 var current_room_id: int = 0
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -23,6 +24,13 @@ var attacks = [
 @onready var model = $Rig
 @onready var anim_tree = $AnimationTree
 @onready var anim_state = $AnimationTree.get("parameters/playback")
+
+func _ready():
+	Events.player_entered_room.connect(on_player_entered_room)
+
+func on_player_entered_room(d: Dictionary):
+	if d["player_id"] == player_id:
+		current_room_id = d["room_id"]
 
 func _physics_process(delta: float):
 	velocity.y -= gravity * delta

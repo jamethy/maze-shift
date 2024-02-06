@@ -1,12 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://b6bgxihd4ny0c"]
+[gd_scene load_steps=5 format=3 uid="uid://b6bgxihd4ny0c"]
 
 [ext_resource type="PackedScene" uid="uid://gxrvh10rb6av" path="res://KayKit_DungeonRemastered_1.0_FREE/Assets/gltf/wall.gltf.glb" id="1_gwoaf"]
+[ext_resource type="Script" path="res://Hallway.gd" id="1_muv2n"]
 [ext_resource type="PackedScene" uid="uid://os2elo43s4kk" path="res://KayKit_DungeonRemastered_1.0_FREE/Assets/gltf/floor_dirt_large.gltf.glb" id="2_mnlxj"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_c8atf"]
 size = Vector3(7, 1, 7)
 
 [node name="Hallway" type="Node3D"]
+script = ExtResource("1_muv2n")
 
 [node name="wall_gltf21" parent="." instance=ExtResource("1_gwoaf")]
 transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, -2, 0, 0)
@@ -65,3 +67,5 @@ collision_mask = 3
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1, 2)
 shape = SubResource("BoxShape3D_c8atf")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

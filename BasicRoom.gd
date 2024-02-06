@@ -72,3 +72,11 @@ func door_count() -> int:
 	if $wall_positive_z.position.y == 4:
 		c += 1
 	return c
+
+
+func _on_area_3d_body_entered(body):
+	if body is Barbarian:
+		Events.emit("player_entered_room", {
+			"player_id": 1, # TODO
+			"room_id": room_id,
+		})

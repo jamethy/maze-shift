@@ -1,11 +1,5 @@
 extends Node3D
-	
-class Hallway:
-	var id: int
-	var node: Node
-	var a: BasicRoom
-	var b: BasicRoom
-	
+
 
 var maze_map = {}
 
@@ -15,6 +9,12 @@ var room_w = 12
 var room_id_counter: int = 1
 var hallway_id_counter: int = 1
 
+var is_server = true
+
+@onready 
+var players = {
+	1: $Barbarian,
+}
 
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -23,6 +23,9 @@ func _ready():
 	add_rooms(r)
 	
 	$Barbarian.position = r.position
+	
+	if is_server:
+		Events.player_entered_hallway.connect(on_hallway_entered)
 
 
 func add_rooms(r: BasicRoom):
@@ -49,9 +52,8 @@ func add_rooms(r: BasicRoom):
 			r.position.x + room_w * out_dir.x,
 			r.position.z + room_w * out_dir.z,
 		)
-		hallway.node.get_node("Area3D").body_entered.connect(on_hallway_entered.bind(hallway))
-		hallway.a = r
-		hallway.node.look_at(hallway.node.position + out_dir) # points -Z toward point - right turn
+		hallway.room_a = r
+		hallway.look_at(hallway.position + out_dir) # points -Z toward point - right turn
 		r.set_door(out_dir, true)
 		
 		var left_dir = out_dir + out_dir.rotated(Vector3.UP, PI/2)
@@ -72,8 +74,8 @@ func add_rooms(r: BasicRoom):
 			)
 			var reverse_in_dir = out_dir.rotated(Vector3.UP, -PI/2)
 			room.set_door(reverse_in_dir, true)
-			hallway.b = room
-			hallway.node.rotation.y -= PI/2
+			hallway.room_b = room
+			hallway.rotation.y -= PI/2
 		elif can_go_right:
 			var room = add_room(
 				r.position.x + room_w * right_dir.x,
@@ -81,8 +83,8 @@ func add_rooms(r: BasicRoom):
 			)
 			var reverse_in_dir = out_dir.rotated(Vector3.UP, PI/2)
 			room.set_door(reverse_in_dir, true)
-			hallway.b = room
-		hallway.node.name = "Hallway" + hallway.a.name + hallway.b.name
+			hallway.room_b = room
+		
 
 
 
@@ -128,7 +130,6 @@ func add_room(x, z):
 	room_id_counter += 1
 	room.position.x = x
 	room.position.z = z
-	room.get_node("Area3D").body_entered.connect(on_room_entered.bind(room))
 	maze_map[xi][zi] = room
 	add_child(room)
 	return room
@@ -143,28 +144,29 @@ func add_hallway(x, z):
 		print("already a something here ", x, ", ", z)
 		return
 	
-	var hallway_obj = hallway_scene.instantiate()
-	hallway_obj.position.x = x
-	hallway_obj.position.z = z
-	var h = Hallway.new()
-	h.node = hallway_obj
-	h.id = hallway_id_counter
+	var hallway = hallway_scene.instantiate()
+	hallway.hallway_id = hallway_id_counter
 	hallway_id_counter += 1
-	maze_map[xi][zi] = h
-	add_child(h.node)
-	return h
+	hallway.name = "Hallway%d" % hallway.hallway_id
+	hallway.position.x = x
+	hallway.position.z = z
+	maze_map[xi][zi] = hallway
+	add_child(hallway)
+	return hallway
 
 
-func on_hallway_entered(body: Barbarian, hallway: Hallway):
-	Events.emit("player_entered_hallway", {
-		"player_id": 1, # TODO
-		"hallway_id": hallway.id,
-	})
+func on_hallway_entered(d: Dictionary):
+	var hallway = get_node('Hallway%d' % d["hallway_id"])
+	if not hallway:
+		print("didn't find hallway")
+		return
+	var player = players[d["player_id"]]
+	
 	var room_ahead: BasicRoom
-	if body.current_room_id == hallway.a.room_id:
-		room_ahead = hallway.b
+	if player.current_room_id == hallway.room_a.room_id:
+		room_ahead = hallway.room_b
 	else:
-		room_ahead = hallway.a
+		room_ahead = hallway.room_a
 	if room_ahead.door_count() == 1:
 		add_rooms(room_ahead)
 	
