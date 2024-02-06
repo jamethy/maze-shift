@@ -1,6 +1,7 @@
 extends Node3D
 	
 class Hallway:
+	var id: int
 	var node: Node
 	var a: BasicRoom
 	var b: BasicRoom
@@ -12,6 +13,7 @@ var basic_room_scene = preload("res://BasicRoom.tscn")
 var hallway_scene = preload("res://Hallway.tscn")
 var room_w = 12
 var room_id_counter: int = 1
+var hallway_id_counter: int = 1
 
 
 func _ready():
@@ -146,17 +148,18 @@ func add_hallway(x, z):
 	hallway_obj.position.z = z
 	var h = Hallway.new()
 	h.node = hallway_obj
+	h.id = hallway_id_counter
+	hallway_id_counter += 1
 	maze_map[xi][zi] = h
 	add_child(h.node)
 	return h
 
 
-func connect_hallyway_to_on_entered(hallway: Hallway):
-	hallway.node.get_node("Area3D").body_entered.connect(on_hallway_entered.bind(hallway))
-
-
 func on_hallway_entered(body: Barbarian, hallway: Hallway):
-	print("hallway entered " + hallway.node.name)
+	Events.emit("player_entered_hallway", {
+		"player_id": 1, # TODO
+		"hallway_id": hallway.id,
+	})
 	var room_ahead: BasicRoom
 	if body.current_room_id == hallway.a.room_id:
 		room_ahead = hallway.b
@@ -164,8 +167,6 @@ func on_hallway_entered(body: Barbarian, hallway: Hallway):
 		room_ahead = hallway.a
 	if room_ahead.door_count() == 1:
 		add_rooms(room_ahead)
-	else:
-		print("already has doors")
 	
 	
 func on_room_entered(body: Barbarian, room: BasicRoom):

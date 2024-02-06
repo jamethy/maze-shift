@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://divxvn8s22p81"]
+[gd_scene load_steps=8 format=3 uid="uid://divxvn8s22p81"]
 
 [ext_resource type="Script" path="res://Game.gd" id="1_e0slp"]
 [ext_resource type="PackedScene" uid="uid://by0rro4achdqf" path="res://barbarian.tscn" id="2_fbvmf"]
@@ -15,6 +15,9 @@ ambient_light_energy = 0.02
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gvrne"]
 size = Vector3(100, 0.01, 100)
+
+[sub_resource type="LabelSettings" id="LabelSettings_3y3ew"]
+font_size = 150
 
 [node name="Game" type="Node3D"]
 script = ExtResource("1_e0slp")
@@ -33,3 +36,20 @@ shape = SubResource("BoxShape3D_gvrne")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.311)
 
 [node name="Chest" parent="." instance=ExtResource("3_cguqk")]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="DistanceLabel" type="Label" parent="CanvasLayer/Control"]
+layout_mode = 0
+offset_left = 37.0
+offset_top = 32.0
+offset_right = 163.0
+offset_bottom = 97.0
+text = "232.1231"
+label_settings = SubResource("LabelSettings_3y3ew")
