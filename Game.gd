@@ -18,6 +18,7 @@ var players = {
 
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	add_room(0, 0)
 	var r = add_room(5 * room_w, 5 * room_w)
 	
 	add_rooms(r)

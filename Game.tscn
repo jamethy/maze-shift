@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://divxvn8s22p81"]
+[gd_scene load_steps=9 format=3 uid="uid://divxvn8s22p81"]
 
 [ext_resource type="Script" path="res://Game.gd" id="1_e0slp"]
 [ext_resource type="PackedScene" uid="uid://by0rro4achdqf" path="res://barbarian.tscn" id="2_fbvmf"]
 [ext_resource type="PackedScene" uid="uid://cg6i26ku8bf33" path="res://KayKit_DungeonRemastered_1.0_FREE/Assets/gltf/chest.glb" id="3_cguqk"]
+[ext_resource type="Script" path="res://DistanceLabel.gd" id="4_bixly"]
 
 [sub_resource type="Environment" id="Environment_xwk4g"]
 background_mode = 1
@@ -17,7 +18,7 @@ ambient_light_energy = 0.02
 size = Vector3(100, 0.01, 100)
 
 [sub_resource type="LabelSettings" id="LabelSettings_3y3ew"]
-font_size = 150
+font_size = 100
 
 [node name="Game" type="Node3D"]
 script = ExtResource("1_e0slp")
@@ -51,5 +52,6 @@ offset_left = 37.0
 offset_top = 32.0
 offset_right = 163.0
 offset_bottom = 97.0
-text = "232.1231"
+text = "Dist: --"
 label_settings = SubResource("LabelSettings_3y3ew")
+script = ExtResource("4_bixly")

@@ -24,12 +24,15 @@ func set_door(dir: Vector3, open: bool):
 	door_node.get_node("wall/StaticBody3D/CollisionShape3D").disabled = open
 	door_node.position.y = 4 if open else 0
 
+var distance_from_center: float
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	$wall_negative_x.visible = !door_negative_x
 	$wall_negative_z.visible = !door_negative_z
 	$wall_positive_x.visible = !door_positive_x
 	$wall_positive_z.visible = !door_positive_z
+	distance_from_center = position.length()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -79,4 +82,5 @@ func _on_area_3d_body_entered(body):
 		Events.emit("player_entered_room", {
 			"player_id": 1, # TODO
 			"room_id": room_id,
+			"distance": distance_from_center,
 		})
