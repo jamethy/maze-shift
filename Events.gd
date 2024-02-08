@@ -10,9 +10,6 @@ signal player_entered_room(dict)
 # player_id, room_id
 signal player_exited_room(dict)
 
-# room_id
-signal room_timed_out(dict)
-
 func emit(signal_name: String, args: Dictionary = {}):
 	# TODO rpc("_emit_signal", signal_name, args)
 	_emit_signal(signal_name, args)

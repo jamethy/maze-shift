@@ -5,10 +5,17 @@ var hallway_id: int
 var room_a: BasicRoom
 var room_b: BasicRoom
 
+var current_players = {}
 
 func _on_area_3d_body_entered(body: Node):
 	if body is Barbarian:
+		current_players[body.player_id] = null
 		Events.emit("player_entered_hallway", {
 			"player_id": 1, # TODO
 			"hallway_id": hallway_id,
 		})
+
+
+func _on_area_3d_body_exited(body):
+	if body is Barbarian:
+		current_players.erase(body.player_id)
