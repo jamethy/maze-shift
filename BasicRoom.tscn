@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://dxhupiv4qym25" path="res://WallTorch.tscn" id="3_0fdyr"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ra607"]
-size = Vector3(11, 1, 11)
+size = Vector3(11, 4, 11)
 
 [node name="BasicRoom" type="Node3D"]
 script = ExtResource("1_5o1vt")
@@ -117,7 +117,13 @@ collision_layer = 3
 collision_mask = 3
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 shape = SubResource("BoxShape3D_ra607")
 
+[node name="Timer" type="Timer" parent="."]
+wait_time = 60.0
+one_shot = true
+
 [connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

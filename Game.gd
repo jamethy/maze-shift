@@ -18,15 +18,18 @@ var players = {
 
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	
 	add_room(0, 0)
+	
 	var r = add_room(5 * room_w, 5 * room_w)
+	$Barbarian.position = r.position
 	
 	add_rooms(r)
 	
-	$Barbarian.position = r.position
-	
 	if is_server:
 		Events.player_entered_hallway.connect(on_hallway_entered)
+		Events.room_timed_out.connect(on_room_timed_out)
+
 
 
 func add_rooms(r: BasicRoom):
@@ -135,6 +138,26 @@ func add_room(x, z):
 	add_child(room)
 	return room
 
+func remove_room(room_id):
+	print("removing room ", room_id)
+	var room = get_node('Room%d' % room_id)
+	for x in maze_map.values():
+		for n in x.values():
+			if n is Hallway and (n.room_a == room or n.room_b == room):
+				n.room_a.set_door(n.position - n.room_a.position, false)
+				n.room_b.set_door(n.position - n.room_b.position, false)
+				remove_from_maze_map(n.position.x, n.position.z)
+				remove_child(n)
+	remove_child(room)
+
+
+func remove_from_maze_map(x, z):
+	var xi = roundi(x)
+	var zi = roundi(z)
+	if xi not in maze_map:
+		return
+	maze_map[xi].erase(zi)
+
 func add_hallway(x, z):
 	var xi = roundi(x)
 	var zi = roundi(z)
@@ -156,6 +179,7 @@ func add_hallway(x, z):
 	return hallway
 
 
+
 func on_hallway_entered(d: Dictionary):
 	var hallway = get_node('Hallway%d' % d["hallway_id"])
 	if not hallway:
@@ -172,7 +196,16 @@ func on_hallway_entered(d: Dictionary):
 		add_rooms(room_ahead)
 	
 	
-func on_room_entered(body: Barbarian, room: BasicRoom):
-	body.current_room_id = room.room_id
-	
-	
+func on_room_timed_out(d: Dictionary):
+	print("room timeout ", d["room_id"])
+	var room = get_node('Room%d' % d["room_id"])
+	if not room:
+		print("didn't find room")
+		return
+	var dist_limit = (2 * room_w + room_w / 2)**2
+	for p in players.values():
+		if room.position.distance_squared_to(p.position) < dist_limit:
+			print("near player")
+			room.get_node("Timer").start()
+			return
+	remove_room(d["room_id"])
