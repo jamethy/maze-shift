@@ -143,7 +143,6 @@ transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 12, 0,
 
 [node name="BasicRoom" parent="." instance=ExtResource("8_id61e")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, -12)
-door_positive_z = true
 
 [node name="Area3D" type="Area3D" parent="."]
 

@@ -3,20 +3,21 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cp5x0if8qjan5"
-path="res://.godot/imported/banner_patternB_white_dungeon_texture.png-40e5927f18f2eca70521ad0b2e14d179.ctex"
+path.s3tc="res://.godot/imported/banner_patternB_white_dungeon_texture.png-40e5927f18f2eca70521ad0b2e14d179.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={}
 
 [deps]
 
 source_file="res://KayKit_DungeonRemastered_1.0_FREE/Assets/gltf/banner_patternB_white_dungeon_texture.png"
-dest_files=["res://.godot/imported/banner_patternB_white_dungeon_texture.png-40e5927f18f2eca70521ad0b2e14d179.ctex"]
+dest_files=["res://.godot/imported/banner_patternB_white_dungeon_texture.png-40e5927f18f2eca70521ad0b2e14d179.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
@@ -32,4 +33,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

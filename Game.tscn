@@ -1,20 +1,24 @@
-[gd_scene load_steps=7 format=3 uid="uid://divxvn8s22p81"]
+[gd_scene load_steps=9 format=3 uid="uid://divxvn8s22p81"]
 
 [ext_resource type="Script" path="res://Game.gd" id="1_e0slp"]
 [ext_resource type="PackedScene" uid="uid://by0rro4achdqf" path="res://barbarian.tscn" id="2_fbvmf"]
 [ext_resource type="PackedScene" uid="uid://cg6i26ku8bf33" path="res://KayKit_DungeonRemastered_1.0_FREE/Assets/gltf/chest.glb" id="3_cguqk"]
+[ext_resource type="Script" path="res://DistanceLabel.gd" id="4_bixly"]
 
 [sub_resource type="Environment" id="Environment_xwk4g"]
 background_mode = 1
 background_energy_multiplier = 1.4
 ambient_light_source = 2
 ambient_light_color = Color(0.505882, 0.505882, 0.380392, 1)
-ambient_light_energy = 0.02
+ambient_light_energy = 0.04
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_hy8wa"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gvrne"]
 size = Vector3(100, 0.01, 100)
+
+[sub_resource type="LabelSettings" id="LabelSettings_3y3ew"]
+font_size = 100
 
 [node name="Game" type="Node3D"]
 script = ExtResource("1_e0slp")
@@ -25,11 +29,31 @@ camera_attributes = SubResource("CameraAttributesPractical_hy8wa")
 
 [node name="Ceiling" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8, 0)
+collision_layer = 0
+collision_mask = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Ceiling"]
 shape = SubResource("BoxShape3D_gvrne")
 
 [node name="Barbarian" parent="." instance=ExtResource("2_fbvmf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.311)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.47345, 0, 79.5808)
 
 [node name="Chest" parent="." instance=ExtResource("3_cguqk")]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="DistanceLabel" type="Label" parent="CanvasLayer/Control"]
+layout_mode = 0
+offset_left = 37.0
+offset_top = 32.0
+offset_right = 163.0
+offset_bottom = 97.0
+text = "Dist: --"
+label_settings = SubResource("LabelSettings_3y3ew")
+script = ExtResource("4_bixly")
