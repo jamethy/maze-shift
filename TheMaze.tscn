@@ -1,9 +1,9 @@
 [gd_scene load_steps=9 format=3 uid="uid://divxvn8s22p81"]
 
-[ext_resource type="Script" path="res://Game.gd" id="1_e0slp"]
-[ext_resource type="PackedScene" uid="uid://by0rro4achdqf" path="res://barbarian.tscn" id="2_fbvmf"]
-[ext_resource type="PackedScene" uid="uid://cg6i26ku8bf33" path="res://KayKit_DungeonRemastered_1.0_FREE/Assets/gltf/chest.glb" id="3_cguqk"]
-[ext_resource type="Script" path="res://DistanceLabel.gd" id="4_bixly"]
+[ext_resource type="Script" path="res://TheMaze.gd" id="1_asx5x"]
+[ext_resource type="PackedScene" uid="uid://by0rro4achdqf" path="res://barbarian.tscn" id="2_d71ol"]
+[ext_resource type="PackedScene" uid="uid://cg6i26ku8bf33" path="res://KayKit_DungeonRemastered_1.0_FREE/Assets/gltf/chest.glb" id="3_qjf3w"]
+[ext_resource type="Script" path="res://DistanceLabel.gd" id="4_7qm05"]
 
 [sub_resource type="Environment" id="Environment_xwk4g"]
 background_mode = 1
@@ -21,7 +21,7 @@ size = Vector3(100, 0.01, 100)
 font_size = 100
 
 [node name="Game" type="Node3D"]
-script = ExtResource("1_e0slp")
+script = ExtResource("1_asx5x")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_xwk4g")
@@ -35,10 +35,10 @@ collision_mask = 0
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Ceiling"]
 shape = SubResource("BoxShape3D_gvrne")
 
-[node name="Barbarian" parent="." instance=ExtResource("2_fbvmf")]
+[node name="Barbarian" parent="." instance=ExtResource("2_d71ol")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.47345, 0, 79.5808)
 
-[node name="Chest" parent="." instance=ExtResource("3_cguqk")]
+[node name="Chest" parent="." instance=ExtResource("3_qjf3w")]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -56,4 +56,4 @@ offset_right = 163.0
 offset_bottom = 97.0
 text = "Dist: --"
 label_settings = SubResource("LabelSettings_3y3ew")
-script = ExtResource("4_bixly")
+script = ExtResource("4_7qm05")
