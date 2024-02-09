@@ -5,7 +5,6 @@ class_name BasicRoom
 var room_id: int
 var timed_out = false
 var current_players = {}
-
 var hallways = {}
 
 func _get_wall_door_node(dir: Vector3) -> Node3D:
@@ -18,17 +17,32 @@ func _get_wall_door_node(dir: Vector3) -> Node3D:
 	elif roundi(dir.z) < -0.5:
 		return $wall_negative_z
 	return null
+
+
+func door_count() -> int:
+	var c = 0
+	if !$wall_negative_x.visible:
+		c += 1
+	if !$wall_negative_z.visible:
+		c += 1
+	if !$wall_positive_x.visible:
+		c += 1
+	if !$wall_positive_z.visible:
+		c += 1
+	return c
+	
 	
 func set_door_open(dir: Vector3, open: bool):
 	var door_node = _get_wall_door_node(dir)
 	# cannot directly set disabled because shrug
 	door_node.get_node("wall/StaticBody3D/CollisionShape3D").set_deferred("disabled", open)
-	door_node.position.y = 0.001 if open else 0.0
 	door_node.visible = !open
+
 
 func connect_hallway(hallway: Hallway):
 	hallways[hallway.hallway_id] = hallway
 	set_door_open(hallway.position - position, true)
+
 
 func disconnect_hallway(hallway: Hallway):
 	if not hallways.erase(hallway.hallway_id):
@@ -49,28 +63,6 @@ func players_nearby(rooms_away: int) -> bool:
 		if other_room.players_nearby(rooms_away - 1):
 			return true
 	return false
-	
-
-
-
-var distance_from_center: float
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	distance_from_center = position.length()
-
-
-func door_count() -> int:
-	var c = 0
-	if $wall_negative_x.position.y > 0:
-		c += 1
-	if $wall_negative_z.position.y > 0:
-		c += 1
-	if $wall_positive_x.position.y > 0:
-		c += 1
-	if $wall_positive_z.position.y > 0:
-		c += 1
-	return c
 
 
 func _on_area_3d_body_entered(body):
@@ -83,7 +75,7 @@ func _on_area_3d_body_entered(body):
 		Events.emit("player_entered_room", {
 			"player_id": body.player_id,
 			"room_id": room_id,
-			"distance": distance_from_center,
+			"distance": position.length(),
 		})
 
 
@@ -100,5 +92,4 @@ func _on_area_3d_body_exited(body):
 
 
 func _on_timer_timeout():
-	print("timed out ", room_id)
 	timed_out = true
