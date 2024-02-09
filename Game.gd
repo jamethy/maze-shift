@@ -187,10 +187,8 @@ func on_player_entered_hallway(d: Dictionary):
 		add_rooms(room_ahead)
 
 
-func on_player_entered_room(d: Dictionary):
+func on_player_entered_room(_d: Dictionary):
 	# clear old rooms
-	var dist_limit = (3 * room_w + room_w / 2)**2
-	
 	for c in get_children():
 		var room = c as BasicRoom
 		if not room:

@@ -18,23 +18,23 @@ func _get_wall_door_node(dir: Vector3) -> Node3D:
 	elif roundi(dir.z) < -0.5:
 		return $wall_negative_z
 	return null
+	
+func set_door_open(dir: Vector3, open: bool):
+	var door_node = _get_wall_door_node(dir)
+	# cannot directly set disabled because shrug
+	door_node.get_node("wall/StaticBody3D/CollisionShape3D").set_deferred("disabled", open)
+	door_node.position.y = 0.001 if open else 0.0
+	door_node.visible = !open
 
 func connect_hallway(hallway: Hallway):
 	hallways[hallway.hallway_id] = hallway
-	var door_node = _get_wall_door_node(hallway.position - position)
-	door_node.visible = false
-	# E 0:00:23:0626   BasicRoom.gd:20 @ set_door(): Can't change this state while flushing queries. Use call_deferred() or set_deferred() to change monitoring state instead.
-  #<C++ Error>    Condition "body->get_space() && flushing_queries" is true.
-  #<C++ Source>   servers/physics_3d/godot_physics_server_3d.cpp:540 @ body_set_shape_disabled()
-  #<Stack Trace>  BasicRoom.gd:20 @ set_door()
-				 #Game.gd:61 @ add_rooms()
-				 #Game.gd:196 @ on_hallway_entered()
-				 #Events.gd:27 @ _emit_signal()
-				 #Events.gd:18 @ emit()
-				 #Hallway.gd:11 @ _on_area_3d_body_entered()
+	set_door_open(hallway.position - position, true)
 
-	door_node.get_node("wall/StaticBody3D/CollisionShape3D").disabled = false
-	door_node.position.y = 4
+func disconnect_hallway(hallway: Hallway):
+	if not hallways.erase(hallway.hallway_id):
+		print("hallway ", hallway.hallway_id, " not attatched to room ", room_id)
+		return
+	set_door_open(hallway.position - position, false)
 
 
 func players_nearby(rooms_away: int) -> bool:
@@ -52,15 +52,6 @@ func players_nearby(rooms_away: int) -> bool:
 	
 
 
-func disconnect_hallway(hallway: Hallway):
-	if not hallways.erase(hallway.hallway_id):
-		print("hallway ", hallway.hallway_id, " not attatched to room ", room_id)
-		return
-	var door_node = _get_wall_door_node(hallway.position - position)
-	door_node.visible = true
-
-	door_node.get_node("wall/StaticBody3D/CollisionShape3D").disabled = true
-	door_node.position.y = 0
 
 var distance_from_center: float
 
