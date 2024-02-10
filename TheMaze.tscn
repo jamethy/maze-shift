@@ -20,7 +20,7 @@ size = Vector3(100, 0.01, 100)
 [sub_resource type="LabelSettings" id="LabelSettings_3y3ew"]
 font_size = 100
 
-[node name="Game" type="Node3D"]
+[node name="TheMaze" type="Node3D"]
 script = ExtResource("1_asx5x")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]

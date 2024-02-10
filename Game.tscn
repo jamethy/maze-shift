@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://brll0dqthyn"]
+
+[ext_resource type="PackedScene" uid="uid://divxvn8s22p81" path="res://TheMaze.tscn" id="1_8wnt1"]
+[ext_resource type="Script" path="res://Networking.gd" id="2_fo47y"]
+
+[node name="Game" type="Node"]
+
+[node name="TheMaze" parent="." instance=ExtResource("1_8wnt1")]
+
+[node name="Networking" type="Node" parent="."]
+script = ExtResource("2_fo47y")
