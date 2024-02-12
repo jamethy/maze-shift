@@ -1,7 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://divxvn8s22p81"]
+[gd_scene load_steps=8 format=3 uid="uid://divxvn8s22p81"]
 
 [ext_resource type="Script" path="res://TheMaze.gd" id="1_asx5x"]
-[ext_resource type="PackedScene" uid="uid://by0rro4achdqf" path="res://barbarian.tscn" id="2_d71ol"]
 [ext_resource type="PackedScene" uid="uid://cg6i26ku8bf33" path="res://KayKit_DungeonRemastered_1.0_FREE/Assets/gltf/chest.glb" id="3_qjf3w"]
 [ext_resource type="Script" path="res://DistanceLabel.gd" id="4_7qm05"]
 
@@ -34,9 +33,6 @@ collision_mask = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Ceiling"]
 shape = SubResource("BoxShape3D_gvrne")
-
-[node name="Barbarian" parent="." instance=ExtResource("2_d71ol")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.47345, 0, 79.5808)
 
 [node name="Chest" parent="." instance=ExtResource("3_qjf3w")]
 

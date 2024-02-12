@@ -11,13 +11,13 @@ config_version=5
 [application]
 
 config/name="peapot"
-run/main_scene="res://Game.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
 Events="*res://Events.gd"
+Lobby="*res://Lobby.gd"
 
 [filesystem]
 
@@ -59,3 +59,7 @@ attack={
 [physics]
 
 3d/default_gravity=20.0
+
+[rendering]
+
+environment/defaults/default_clear_color=Color(0.0627451, 0.0627451, 0.0627451, 1)

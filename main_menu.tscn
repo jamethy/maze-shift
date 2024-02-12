@@ -1,0 +1,198 @@
+[gd_scene load_steps=4 format=3 uid="uid://dl1wb2lvl564d"]
+
+[ext_resource type="Theme" uid="uid://bkngeyd7nwkhs" path="res://main_menu_theme.tres" id="1_esbtn"]
+[ext_resource type="Script" path="res://main_menu.gd" id="1_u2o4t"]
+[ext_resource type="PackedScene" uid="uid://66wb6y4wuwor" path="res://lobby_player_container.tscn" id="3_uxjut"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_esbtn")
+script = ExtResource("1_u2o4t")
+
+[node name="GameLaunchMenu" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GameLaunchMenu"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="HostButton" type="Button" parent="GameLaunchMenu/VBoxContainer"]
+layout_mode = 2
+text = "Host"
+
+[node name="JoinButton" type="Button" parent="GameLaunchMenu/VBoxContainer"]
+layout_mode = 2
+text = "Join"
+
+[node name="ExitButton" type="Button" parent="GameLaunchMenu/VBoxContainer"]
+layout_mode = 2
+text = "Exit"
+
+[node name="HostMenu" type="CenterContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HostMenu"]
+layout_mode = 2
+
+[node name="PlayerNameContainer" type="HBoxContainer" parent="HostMenu/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HostMenu/VBoxContainer/PlayerNameContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Player Name"
+
+[node name="LineEdit" type="LineEdit" parent="HostMenu/VBoxContainer/PlayerNameContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Bob"
+
+[node name="HSeparator" type="HSeparator" parent="HostMenu/VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="HostButton" type="Button" parent="HostMenu/VBoxContainer"]
+layout_mode = 2
+text = "Host"
+
+[node name="BackButton" type="Button" parent="HostMenu/VBoxContainer"]
+layout_mode = 2
+text = "Back"
+
+[node name="JoinMenu" type="CenterContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="JoinMenu"]
+layout_mode = 2
+
+[node name="IPAddressContainer" type="HBoxContainer" parent="JoinMenu/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="JoinMenu/VBoxContainer/IPAddressContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "IP Address"
+
+[node name="LineEdit" type="LineEdit" parent="JoinMenu/VBoxContainer/IPAddressContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "127.0.0.1"
+
+[node name="PlayerNameContainer" type="HBoxContainer" parent="JoinMenu/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="JoinMenu/VBoxContainer/PlayerNameContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Player Name"
+
+[node name="LineEdit" type="LineEdit" parent="JoinMenu/VBoxContainer/PlayerNameContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Bob"
+
+[node name="HSeparator" type="HSeparator" parent="JoinMenu/VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="JoinButton" type="Button" parent="JoinMenu/VBoxContainer"]
+layout_mode = 2
+text = "Join"
+
+[node name="BackButton" type="Button" parent="JoinMenu/VBoxContainer"]
+layout_mode = 2
+text = "Back"
+
+[node name="LobbyMenu" type="MarginContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 100
+
+[node name="HBoxContainer" type="HBoxContainer" parent="LobbyMenu"]
+layout_mode = 2
+
+[node name="PlayersContainer" type="VBoxContainer" parent="LobbyMenu/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="ColumnLabels" type="HBoxContainer" parent="LobbyMenu/HBoxContainer/PlayersContainer"]
+layout_mode = 2
+
+[node name="LabelLabel" type="Label" parent="LobbyMenu/HBoxContainer/PlayersContainer/ColumnLabels"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Player Name"
+
+[node name="ReadyLabel" type="Label" parent="LobbyMenu/HBoxContainer/PlayersContainer/ColumnLabels"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Ready"
+horizontal_alignment = 2
+
+[node name="HSeparator" type="HSeparator" parent="LobbyMenu/HBoxContainer/PlayersContainer"]
+layout_mode = 2
+
+[node name="LobbyPlayerContainer" parent="LobbyMenu/HBoxContainer/PlayersContainer" instance=ExtResource("3_uxjut")]
+layout_mode = 2
+
+[node name="ControlsContainer" type="VBoxContainer" parent="LobbyMenu/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CenterContainer" type="CenterContainer" parent="LobbyMenu/HBoxContainer/ControlsContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LobbyMenu/HBoxContainer/ControlsContainer/CenterContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="ReadyButton" type="Button" parent="LobbyMenu/HBoxContainer/ControlsContainer/CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Ready"
+
+[node name="StartButton" type="Button" parent="LobbyMenu/HBoxContainer/ControlsContainer/CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Start Game"
+
+[connection signal="pressed" from="GameLaunchMenu/VBoxContainer/HostButton" to="." method="_on_game_launch_host_button_pressed"]
+[connection signal="pressed" from="GameLaunchMenu/VBoxContainer/JoinButton" to="." method="_on_game_launched_join_button_pressed"]
+[connection signal="pressed" from="GameLaunchMenu/VBoxContainer/ExitButton" to="." method="_on_exit_button_pressed"]
+[connection signal="text_changed" from="HostMenu/VBoxContainer/PlayerNameContainer/LineEdit" to="." method="_on_player_name_changed"]
+[connection signal="pressed" from="HostMenu/VBoxContainer/HostButton" to="." method="_on_host_host_button_pressed"]
+[connection signal="pressed" from="HostMenu/VBoxContainer/BackButton" to="." method="_on_host_back_button_pressed"]
+[connection signal="pressed" from="JoinMenu/VBoxContainer/JoinButton" to="." method="_on_join_join_button_pressed"]
+[connection signal="pressed" from="JoinMenu/VBoxContainer/BackButton" to="." method="_on_join_back_button_pressed"]
+[connection signal="pressed" from="LobbyMenu/HBoxContainer/ControlsContainer/CenterContainer/VBoxContainer/ReadyButton" to="." method="_on_ready_button_pressed"]

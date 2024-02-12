@@ -5,32 +5,42 @@ var maze_map = {}
 
 var basic_room_scene = preload("res://BasicRoom.tscn")
 var hallway_scene = preload("res://Hallway.tscn")
+var barbarian_scene = preload("res://barbarian.tscn")
 var room_w = 12
 var room_id_counter: int = 1
 var hallway_id_counter: int = 1
 
 var is_server = true
 
-@onready 
-var players = {
-	1: $Barbarian,
-}
+var players = {}
+
+var starting_room: BasicRoom
 
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
 	add_room(0, 0)
 	
-	var r = add_room(5 * room_w, 5 * room_w)
-	$Barbarian.position = r.position
-	
-	add_rooms(r)
-	
 	if is_server:
 		Events.player_entered_hallway.connect(on_player_entered_hallway)
 		Events.player_entered_room.connect(on_player_entered_room)
 
 
+func initial_setup(initial_distance: int = 5):
+	starting_room = add_room(5 * room_w, 5 * room_w)
+	$Barbarian.position = starting_room.position
+
+
+func add_player(id: int):
+	var b = barbarian_scene.instantiate()
+	b.id = id
+	b.position = starting_room.position  # TODO add random
+	players[id] = b
+	
+
+func start_game():
+	add_rooms(starting_room)
+	
 
 func add_rooms(r: BasicRoom):
 	print("adding rooms to room ", r.room_id)
