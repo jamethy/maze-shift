@@ -34,6 +34,9 @@ text = "Host"
 layout_mode = 2
 text = "Join"
 
+[node name="HSeparator" type="HSeparator" parent="GameLaunchMenu/VBoxContainer"]
+layout_mode = 2
+
 [node name="ExitButton" type="Button" parent="GameLaunchMenu/VBoxContainer"]
 layout_mode = 2
 text = "Exit"
@@ -71,6 +74,9 @@ layout_mode = 2
 [node name="HostButton" type="Button" parent="HostMenu/VBoxContainer"]
 layout_mode = 2
 text = "Host"
+
+[node name="HSeparator2" type="HSeparator" parent="HostMenu/VBoxContainer"]
+layout_mode = 2
 
 [node name="BackButton" type="Button" parent="HostMenu/VBoxContainer"]
 layout_mode = 2
@@ -122,6 +128,9 @@ layout_mode = 2
 [node name="JoinButton" type="Button" parent="JoinMenu/VBoxContainer"]
 layout_mode = 2
 text = "Join"
+
+[node name="HSeparator2" type="HSeparator" parent="JoinMenu/VBoxContainer"]
+layout_mode = 2
 
 [node name="BackButton" type="Button" parent="JoinMenu/VBoxContainer"]
 layout_mode = 2
@@ -186,6 +195,13 @@ text = "Ready"
 [node name="StartButton" type="Button" parent="LobbyMenu/HBoxContainer/ControlsContainer/CenterContainer/VBoxContainer"]
 layout_mode = 2
 text = "Start Game"
+
+[node name="HSeparator" type="HSeparator" parent="LobbyMenu/HBoxContainer/ControlsContainer/CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="LobbyMenu/HBoxContainer/ControlsContainer/CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Back"
 
 [connection signal="pressed" from="GameLaunchMenu/VBoxContainer/HostButton" to="." method="_on_game_launch_host_button_pressed"]
 [connection signal="pressed" from="GameLaunchMenu/VBoxContainer/JoinButton" to="." method="_on_game_launched_join_button_pressed"]

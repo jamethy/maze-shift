@@ -10,6 +10,7 @@ var players_lobby_info = {}
 func _ready():
 	Events.lobby_players_updated.connect(_on_lobby_players_updated)
 	Events.player_lobby_info_updated.connect(_on_player_lobby_info_updated)
+	# TODO Events.server_disconnected.connect(_on_server_disconnected)
 	$HostMenu/VBoxContainer/PlayerNameContainer/LineEdit.text = Lobby.player_info["name"]
 	$JoinMenu/VBoxContainer/PlayerNameContainer/LineEdit.text = Lobby.player_info["name"]
 	# just used for design
