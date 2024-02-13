@@ -23,15 +23,17 @@ var players_loaded_into_game = 0
 
 
 func _ready():
-	multiplayer.peer_connected.connect(_on_player_connected)
+	#multiplayer.peer_connected.connect(_on_player_connected)
 	multiplayer.peer_disconnected.connect(_on_player_disconnected)
-	multiplayer.connected_to_server.connect(_on_connected_ok)
+	multiplayer.connected_to_server.connect(_on_connected_to_server_ok)
 	multiplayer.connection_failed.connect(_on_connected_fail)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
+	Events.lobby_players_updated.connect(_on_lobby_players_updated)
 
 # both
 
-
+func _on_lobby_players_updated(player_infos):
+	players = player_infos
 
 func remove_multiplayer_peer():
 	multiplayer.multiplayer_peer = null
@@ -40,19 +42,15 @@ func remove_multiplayer_peer():
 # When a peer connects, send them my player info.
 # This allows transfer of all desired data for each player, not only the unique ID.
 # TODO probably only server
-func _on_player_connected(id):
-	_register_player.rpc_id(id, player_info)
+#func _on_player_connected(id):
+	#if multiplayer.is_server():
+		#_register_player.rpc_id(id, player_info)
 
 	
 
 @rpc("any_peer", "reliable")
 func _register_player(new_player_info):
 	var new_player_id = multiplayer.get_remote_sender_id()
-	players[new_player_id] = new_player_info
-	Events.local_emit("player_connected", {
-		"player_id": new_player_id, 
-		"player_info": new_player_info,
-	})
 
 func _on_player_disconnected(id):
 	players.erase(id)
@@ -81,13 +79,13 @@ func player_loaded_into_game():
 			players_loaded_into_game = 0
 
 
-func _on_connected_ok():
-	var peer_id = multiplayer.get_unique_id()
-	players[peer_id] = player_info
-	Events.local_emit("player_connected", {
-		"player_id": peer_id, 
-		"player_info": player_info,
-	})
+func _on_connected_to_server_ok():
+	_register_on_server.rpc_id(1, player_info)
+
+@rpc("any_peer", "reliable")
+func _register_on_server(new_player_info):
+	players[multiplayer.get_remote_sender_id()] = new_player_info
+	Events.emit("lobby_players_updated", players)
 
 
 func _on_connected_fail():
@@ -100,6 +98,7 @@ func _on_server_disconnected():
 	Events.local_emit("server_disconnected")
 
 # server only
+# - new_player_connected
 
 func start_server():
 	var peer = ENetMultiplayerPeer.new()
@@ -109,10 +108,7 @@ func start_server():
 	multiplayer.multiplayer_peer = peer
 
 	players[1] = player_info
-	Events.local_emit("player_connected", {
-		"player_id": 1, 
-		"player_info": player_info,
-	})
+	Events.local_emit("lobby_players_updated", players)
 
 
 # When the server decides to start the game from a UI scene,

@@ -193,6 +193,7 @@ text = "Start Game"
 [connection signal="text_changed" from="HostMenu/VBoxContainer/PlayerNameContainer/LineEdit" to="." method="_on_player_name_changed"]
 [connection signal="pressed" from="HostMenu/VBoxContainer/HostButton" to="." method="_on_host_host_button_pressed"]
 [connection signal="pressed" from="HostMenu/VBoxContainer/BackButton" to="." method="_on_host_back_button_pressed"]
+[connection signal="text_changed" from="JoinMenu/VBoxContainer/PlayerNameContainer/LineEdit" to="." method="_on_player_name_changed"]
 [connection signal="pressed" from="JoinMenu/VBoxContainer/JoinButton" to="." method="_on_join_join_button_pressed"]
 [connection signal="pressed" from="JoinMenu/VBoxContainer/BackButton" to="." method="_on_join_back_button_pressed"]
 [connection signal="pressed" from="LobbyMenu/HBoxContainer/ControlsContainer/CenterContainer/VBoxContainer/ReadyButton" to="." method="_on_ready_button_pressed"]
