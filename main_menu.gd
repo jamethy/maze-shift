@@ -5,11 +5,8 @@ extends Control
 var not_ready_color = Color("a22300")
 var ready_color = Color("009100")
 
-var players_lobby_info = {}
-
 func _ready():
 	Events.lobby_players_updated.connect(_on_lobby_players_updated)
-	Events.player_lobby_info_updated.connect(_on_player_lobby_info_updated)
 	# TODO Events.server_disconnected.connect(_on_server_disconnected)
 	$HostMenu/VBoxContainer/PlayerNameContainer/LineEdit.text = Lobby.player_info["name"]
 	$JoinMenu/VBoxContainer/PlayerNameContainer/LineEdit.text = Lobby.player_info["name"]
@@ -78,40 +75,19 @@ func _on_player_name_changed(new_text):
 
 
 func _on_ready_button_pressed():
-	var info = players_lobby_info[multiplayer.get_unique_id()]
-	info["is_ready"] = !info["is_ready"]
-	if multiplayer.is_server():
-		Events.emit("player_lobby_info_updated", players_lobby_info)
-	else:
-		_update_server_lobby_info.rpc_id(1, info)
-	
-@rpc("any_peer", "reliable")
-func _update_server_lobby_info(info: Dictionary):
-	players_lobby_info[multiplayer.get_remote_sender_id()] = info
-	Events.emit("player_lobby_info_updated", players_lobby_info)
+	var info = Lobby.players[multiplayer.get_unique_id()]
+	info["is_ready"] = !info.get("is_ready", false)
+	Lobby.update_my_player_info(info)
 
-func _on_lobby_players_updated(d: Dictionary):
-	print(d)
-	var new_players = false
-	for player_id in d:
-		print(player_id)
+func _on_lobby_players_updated(players: Dictionary):
+	for player_id in players:
+		var info = players[player_id]
 		var player_node = get_or_add_player_container(player_id)
-		player_node.get_node("Label").text = d[player_id]["name"]
-		if player_id not in players_lobby_info:
-			new_players = true
-			players_lobby_info[player_id] = {
-				"is_ready": false,
-			}
-	if new_players:
-		Events.emit("player_lobby_info_updated", players_lobby_info)
-
-func _on_player_lobby_info_updated(d: Dictionary):
-	players_lobby_info = d
-	for player_id in players_lobby_info:
-		var info = players_lobby_info[player_id]
-		var player_node = get_or_add_player_container(player_id)
+		player_node.get_node("Label").text = info["name"]
 		var color_rect = player_node.get_node("ColorRect")
-		if info["is_ready"]:
+		if info.get("is_ready", false):
 			color_rect.color = ready_color
 		else:
 			color_rect.color = not_ready_color
+
+

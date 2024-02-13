@@ -80,11 +80,18 @@ func player_loaded_into_game():
 
 
 func _on_connected_to_server_ok():
-	_register_on_server.rpc_id(1, player_info)
+	update_my_player_info(player_info)
+	
+func update_my_player_info(player_info):
+	if multiplayer.is_server():
+		players[1] = player_info
+		Events.emit("lobby_players_updated", players)
+	else:
+		_update_my_player_info.rpc_id(1, player_info)
 
 @rpc("any_peer", "reliable")
-func _register_on_server(new_player_info):
-	players[multiplayer.get_remote_sender_id()] = new_player_info
+func _update_my_player_info(player_info):
+	players[multiplayer.get_remote_sender_id()] = player_info
 	Events.emit("lobby_players_updated", players)
 
 

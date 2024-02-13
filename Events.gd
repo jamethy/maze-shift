@@ -13,9 +13,6 @@ signal player_exited_room(dict)
 # player_info by player_id
 signal lobby_players_updated(dict)
 
-# lobby_info by player_id
-signal player_lobby_info_updated(dict)
-
 # player_id
 signal player_disconnected(dict)
 
