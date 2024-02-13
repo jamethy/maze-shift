@@ -76,7 +76,10 @@ func _on_player_name_changed(new_text):
 
 func _on_ready_button_pressed():
 	var info = Lobby.players[multiplayer.get_unique_id()]
-	info["is_ready"] = !info.get("is_ready", false)
+	if info.get("status") == "ready":
+		info["status"] = "not_ready"
+	else:
+		info["status"] = "ready"
 	Lobby.update_my_player_info(info)
 
 func _on_lobby_players_updated(players: Dictionary):
@@ -85,7 +88,7 @@ func _on_lobby_players_updated(players: Dictionary):
 		var player_node = get_or_add_player_container(player_id)
 		player_node.get_node("Label").text = info["name"]
 		var color_rect = player_node.get_node("ColorRect")
-		if info.get("is_ready", false):
+		if info.get("status") == "ready":
 			color_rect.color = ready_color
 		else:
 			color_rect.color = not_ready_color
