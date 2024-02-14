@@ -35,22 +35,6 @@ func _ready():
 func _on_lobby_players_updated(player_infos):
 	players = player_infos
 
-func remove_multiplayer_peer():
-	multiplayer.multiplayer_peer = null
-
-
-# When a peer connects, send them my player info.
-# This allows transfer of all desired data for each player, not only the unique ID.
-# TODO probably only server
-#func _on_player_connected(id):
-	#if multiplayer.is_server():
-		#_register_player.rpc_id(id, player_info)
-
-	
-
-@rpc("any_peer", "reliable")
-func _register_player(new_player_info):
-	var new_player_id = multiplayer.get_remote_sender_id()
 
 func _on_player_disconnected(id):
 	players[id]["status"] = "disconnected"
@@ -82,18 +66,22 @@ func player_loaded_into_game():
 func _on_connected_to_server_ok():
 	update_my_player_info(player_info)
 	
-func update_my_player_info(player_info):
+func update_my_player_info(updated_player_info):
 	if multiplayer.is_server():
-		players[1] = player_info
+		players[1] = updated_player_info
 		Events.emit("lobby_players_updated", players)
 	else:
-		_update_my_player_info.rpc_id(1, player_info)
+		_update_my_player_info.rpc_id(1, updated_player_info)
 
 @rpc("any_peer", "reliable")
-func _update_my_player_info(player_info):
-	players[multiplayer.get_remote_sender_id()] = player_info
+func _update_my_player_info(updated_player_info):
+	players[multiplayer.get_remote_sender_id()] = updated_player_info
 	Events.emit("lobby_players_updated", players)
 
+
+func disconnect_from_server():
+	multiplayer.multiplayer_peer = null
+	Events.local_emit("lobby_players_updated", {})
 
 func _on_connected_fail():
 	multiplayer.multiplayer_peer = null

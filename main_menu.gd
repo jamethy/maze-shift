@@ -7,23 +7,45 @@ var ready_color = Color("009100")
 
 func _ready():
 	Events.lobby_players_updated.connect(_on_lobby_players_updated)
-	# TODO Events.server_disconnected.connect(_on_server_disconnected)
-	$HostMenu/VBoxContainer/PlayerNameContainer/LineEdit.text = Lobby.player_info["name"]
-	$JoinMenu/VBoxContainer/PlayerNameContainer/LineEdit.text = Lobby.player_info["name"]
 	# just used for design
 	$LobbyMenu/HBoxContainer/PlayersContainer/LobbyPlayerContainer.queue_free()
+
+
+func _hide_all():
+	for c in get_children():
+		c.visible = false
+
+
+func show_game_launch_menu():
+	_hide_all()
+	$GameLaunchMenu.visible = true
+
+
+func show_host_menu():
+	_hide_all()
+	$HostMenu/VBoxContainer/PlayerNameContainer/LineEdit.text = Lobby.player_info["name"]
+	$HostMenu.visible = true
+
+
+func show_join_menu():
+	_hide_all()
+	$JoinMenu/VBoxContainer/PlayerNameContainer/LineEdit.text = Lobby.player_info["name"]
+	$JoinMenu.visible = true
+
+
+func show_lobby_menu():
+	_hide_all()
+	$LobbyMenu.visible = true
 
 
 # GameLaunchMenu buttons
 
 func _on_game_launch_host_button_pressed():
-	$HostMenu.visible = true
-	$GameLaunchMenu.visible = false
+	show_host_menu()
 
 
 func _on_game_launched_join_button_pressed():
-	$JoinMenu.visible = true
-	$GameLaunchMenu.visible = false
+	show_join_menu()
 
 
 func _on_exit_button_pressed():
@@ -33,31 +55,29 @@ func _on_exit_button_pressed():
 
 func _on_host_host_button_pressed():
 	Lobby.start_server()
-	$HostMenu.visible = false
-	$LobbyMenu.visible = true
+	show_lobby_menu()
 
 
 func _on_host_back_button_pressed():
-	$HostMenu.visible = false
-	$GameLaunchMenu.visible = true
+	show_game_launch_menu()
 
 
 # JoinMenu Buttons
 
 func _on_join_back_button_pressed():
-	$JoinMenu.visible = false
-	$GameLaunchMenu.visible = true
+	show_game_launch_menu()
 
 
 func _on_join_join_button_pressed():
 	Lobby.join_game($JoinMenu/VBoxContainer/IPAddressContainer/LineEdit.text)
-	$JoinMenu.visible = false
-	$LobbyMenu.visible = true
+	show_lobby_menu()
+	
+# LobbyMenu
 
 func get_player_container_or_null(player_id: int):
 	var node_name = "Player%dContainer" % player_id
 	var parent_node = $LobbyMenu/HBoxContainer/PlayersContainer
-	return parent_node.get_node(node_name)
+	return parent_node.get_node_or_null(node_name)
 
 func get_or_add_player_container(player_id: int):
 	var player_node = get_player_container_or_null(player_id)
@@ -89,9 +109,9 @@ func _on_lobby_players_updated(players: Dictionary):
 	for player_id in players:
 		var info = players[player_id]
 		if info.get("status") == "disconnected":
-			var player_node = get_player_container_or_null(player_id)
-			if player_node != null:
-				$LobbyMenu/HBoxContainer/PlayersContainer.remove_child(player_node)
+			var dc_player_node = get_player_container_or_null(player_id)
+			if dc_player_node != null:
+				$LobbyMenu/HBoxContainer/PlayersContainer.remove_child(dc_player_node)
 			continue
 		var player_node = get_or_add_player_container(player_id)
 		player_node.get_node("Label").text = info["name"]
@@ -102,3 +122,9 @@ func _on_lobby_players_updated(players: Dictionary):
 			color_rect.color = not_ready_color
 
 
+func _on_lobby_back_button_pressed():
+	if multiplayer.is_server():
+		show_host_menu()
+	else:
+		show_join_menu()
+	Lobby.disconnect_from_server()
