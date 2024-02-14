@@ -53,8 +53,8 @@ func _register_player(new_player_info):
 	var new_player_id = multiplayer.get_remote_sender_id()
 
 func _on_player_disconnected(id):
-	players.erase(id)
-	Events.local_emit("player_disconnected", {"player_id": id})
+	players[id]["status"] = "disconnected"
+	Events.emit("lobby_players_updated", players)
 
 # client
 

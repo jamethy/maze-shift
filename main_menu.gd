@@ -54,17 +54,20 @@ func _on_join_join_button_pressed():
 	$JoinMenu.visible = false
 	$LobbyMenu.visible = true
 
-
-func get_or_add_player_container(player_id: int):
+func get_player_container_or_null(player_id: int):
 	var node_name = "Player%dContainer" % player_id
 	var parent_node = $LobbyMenu/HBoxContainer/PlayersContainer
-	if parent_node.has_node(node_name):
-		return parent_node.get_node(node_name)
-	var player_node = lobby_player_container_scene.instantiate()
+	return parent_node.get_node(node_name)
+
+func get_or_add_player_container(player_id: int):
+	var player_node = get_player_container_or_null(player_id)
+	if player_node != null:
+		return player_node
+	player_node = lobby_player_container_scene.instantiate()
 	player_node.name = "Player%dContainer" % player_id
 	player_node.get_node("Label").text = Lobby.players[player_id]["name"]
 	player_node.get_node("ColorRect").color = not_ready_color
-	parent_node.add_child(player_node)
+	$LobbyMenu/HBoxContainer/PlayersContainer.add_child(player_node)
 	return player_node
 
 
@@ -85,6 +88,11 @@ func _on_ready_button_pressed():
 func _on_lobby_players_updated(players: Dictionary):
 	for player_id in players:
 		var info = players[player_id]
+		if info.get("status") == "disconnected":
+			var player_node = get_player_container_or_null(player_id)
+			if player_node != null:
+				$LobbyMenu/HBoxContainer/PlayersContainer.remove_child(player_node)
+			continue
 		var player_node = get_or_add_player_container(player_id)
 		player_node.get_node("Label").text = info["name"]
 		var color_rect = player_node.get_node("ColorRect")
