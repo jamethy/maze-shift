@@ -17,12 +17,13 @@ var players = {}
 # For example, the value of "name" can be set to something the player
 # entered in a UI scene.
 var player_info = {"name": "", "status": "unknown"}
+var game_status = "unknown"
 
 var players_loaded_into_game = 0
 
 
 func _ready():
-	#multiplayer.peer_connected.connect(_on_player_connected)
+	multiplayer.peer_connected.connect(_on_player_connected)
 	multiplayer.peer_disconnected.connect(_on_player_disconnected)
 	multiplayer.connected_to_server.connect(_on_connected_to_server_ok)
 	multiplayer.connection_failed.connect(_on_connected_fail)
@@ -32,6 +33,19 @@ func _ready():
 	Events.lobby_start_game.connect(_on_lobby_start_game)
 
 # both
+
+func _on_player_connected(id):
+	if multiplayer.is_server():
+		_receive_joining_server_info.rpc_id(id, {
+			"game_status": game_status,
+		})
+
+
+@rpc("authority", "call_remote", "reliable")
+func _receive_joining_server_info(info: Dictionary):
+	if info["game_status"] in ["loading_in", "game_started"]:
+		_on_lobby_start_game({})
+
 
 func _on_lobby_players_updated(player_infos):
 	players = player_infos
@@ -62,10 +76,12 @@ func player_loaded_into_game():
 		if players_loaded_into_game == players.size():
 			$/root/Game.start_game()
 			players_loaded_into_game = 0
+			game_status = "game_started"
 
 
 func _on_lobby_start_game(_d):
 	get_tree().change_scene_to_file("res://TheMaze.tscn")
+	game_status = "loading_in"
 
 
 func _on_connected_to_server_ok():

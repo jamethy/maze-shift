@@ -17,6 +17,9 @@ signal server_disconnected(dict)
 
 signal lobby_start_game(dict)
 
+# player_id, move
+signal player_attacked(dict)
+
 func emit(signal_name: String, args: Dictionary = {}):
 	if multiplayer.has_multiplayer_peer():
 		_emit_signal.rpc(signal_name, args)

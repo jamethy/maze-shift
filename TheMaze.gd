@@ -20,13 +20,25 @@ func _ready():
 	if Lobby.is_host():
 		Events.player_entered_hallway.connect(on_player_entered_hallway)
 		Events.player_entered_room.connect(on_player_entered_room)
-
+	Events.lobby_players_updated.connect(_on_lobby_players_updated)
+	
 	var initial_distance = 5
 	starting_room = add_room(initial_distance * room_w, initial_distance * room_w)
 	for player_id in Lobby.players:
 		add_player(player_id, Lobby.players[player_id])
 	
 	start_game()
+
+
+func _on_lobby_players_updated(players: Dictionary):
+	for player_id in players:
+		var node_name = "Player%d" % player_id
+		var exists = has_node(node_name)
+		var connected = players[player_id]["status"] != "disconnected"
+		if not exists and connected:
+			add_player(player_id, Lobby.players[player_id])
+		elif exists and not connected:
+			remove_child(get_node(node_name))
 
 
 func add_player(id: int, _player_info: Dictionary):

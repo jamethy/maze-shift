@@ -30,6 +30,7 @@ var attacks = [
 func _ready():
 	if Lobby.is_host():
 		Events.player_entered_room.connect(on_player_entered_room)
+	Events.player_attacked.connect(_on_player_attacked)
 	if multiplayer.multiplayer_peer == null or is_multiplayer_authority():
 		$SpringArm3D/Camera3D.current = true
 
@@ -81,5 +82,12 @@ func _unhandled_input(event):
 		spring_arm.rotation_degrees.x = clamp(spring_arm.rotation_degrees.x, -90, 30)
 		spring_arm.rotation.y -= event.relative.x * mouse_sensitivity
 	if event.is_action_pressed("attack"):
-		# TODO networking
-		anim_state.travel(attacks.pick_random())
+		Events.emit("player_attacked", {
+			"player_id": multiplayer.get_unique_id(),
+			"move": attacks.pick_random(),
+		})
+		
+
+func _on_player_attacked(d: Dictionary):
+	if d["player_id"] == id:
+		anim_state.travel(d["move"])
