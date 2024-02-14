@@ -4,7 +4,7 @@ class_name Barbarian
 # https://github.com/finepointcgi/Godot-4-Multiplayer-Lan-Tutorial/blob/main/player.gd
 
 @export var speed = 10.0
-@export var acceleration = 4.0
+@export var acceleration = 10.0
 @export var jump_speed = 8.0
 @export var rotation_speed = 12.0
 @export var mouse_sensitivity = 0.0015
@@ -83,7 +83,7 @@ func _unhandled_input(event):
 		spring_arm.rotation.y -= event.relative.x * mouse_sensitivity
 	if event.is_action_pressed("attack"):
 		Events.emit("player_attacked", {
-			"player_id": multiplayer.get_unique_id(),
+			"player_id": Lobby.get_my_id(),
 			"move": attacks.pick_random(),
 		})
 		

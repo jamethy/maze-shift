@@ -89,7 +89,8 @@ func _on_connected_to_server_ok():
 	
 func update_my_player_info(updated_player_info):
 	if is_host():
-		players[1] = updated_player_info
+		var player_id = 1 if multiplayer.has_multiplayer_peer() else 0
+		players[player_id] = updated_player_info
 		Events.emit("lobby_players_updated", players)
 	else:
 		_update_my_player_info.rpc_id(1, updated_player_info)
@@ -133,6 +134,8 @@ func start_server():
 func load_game(game_scene_path):
 	get_tree().change_scene_to_file(game_scene_path)
 
+func get_my_id():
+	return multiplayer.get_unique_id() if multiplayer.has_multiplayer_peer() else 0
 
 func is_host():
 	return not multiplayer.has_multiplayer_peer() or multiplayer.is_server()

@@ -49,7 +49,7 @@ func _on_game_launched_join_button_pressed():
 
 
 func _on_game_launched_local_button_pressed():
-	Lobby.players[1] = Lobby.player_info
+	Lobby.players[0] = Lobby.player_info
 	Events.emit("lobby_start_game")
 
 func _on_exit_button_pressed():
@@ -102,7 +102,7 @@ func _on_player_name_changed(new_text):
 
 
 func _on_ready_button_pressed():
-	var info = Lobby.players[multiplayer.get_unique_id()]
+	var info = Lobby.players[Lobby.get_my_id()]
 	if info.get("status") == "ready":
 		info["status"] = "not_ready"
 	else:
