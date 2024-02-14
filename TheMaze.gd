@@ -10,10 +10,6 @@ var room_w = 12
 var room_id_counter: int = 1
 var hallway_id_counter: int = 1
 
-var is_server = true
-
-var players = {}
-
 var starting_room: BasicRoom
 
 func _ready():
@@ -21,21 +17,27 @@ func _ready():
 	
 	add_room(0, 0)
 	
-	if is_server:
+	if Lobby.is_host():
 		Events.player_entered_hallway.connect(on_player_entered_hallway)
 		Events.player_entered_room.connect(on_player_entered_room)
 
+	var initial_distance = 5
+	starting_room = add_room(initial_distance * room_w, initial_distance * room_w)
+	for player_id in Lobby.players:
+		add_player(player_id, Lobby.players[player_id])
+	
+	start_game()
 
-func initial_setup(initial_distance: int = 5):
-	starting_room = add_room(5 * room_w, 5 * room_w)
-	$Barbarian.position = starting_room.position
 
-
-func add_player(id: int):
+func add_player(id: int, _player_info: Dictionary):
 	var b = barbarian_scene.instantiate()
+	b.name = "Player%d" % id
 	b.id = id
 	b.position = starting_room.position  # TODO add random
-	players[id] = b
+	b.position.x += randf() * room_w / 3
+	b.position.z += randf() * room_w / 3
+	b.set_multiplayer_authority(id)
+	add_child(b)
 	
 
 func start_game():
@@ -186,7 +188,7 @@ func on_player_entered_hallway(d: Dictionary):
 	if not hallway:
 		print("didn't find hallway")
 		return
-	var player = players[d["player_id"]]
+	var player = get_node("Player%d" % d["player_id"])
 	
 	var room_ahead: BasicRoom
 	if player.current_room_id == hallway.room_a.room_id:

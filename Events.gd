@@ -13,10 +13,15 @@ signal player_exited_room(dict)
 # player_info by player_id
 signal lobby_players_updated(dict)
 
-signal server_disconnected
+signal server_disconnected(dict)
+
+signal lobby_start_game(dict)
 
 func emit(signal_name: String, args: Dictionary = {}):
-	_emit_signal.rpc(signal_name, args)
+	if multiplayer.has_multiplayer_peer():
+		_emit_signal.rpc(signal_name, args)
+	else:
+		local_emit(signal_name, args)
 
 func local_emit(signal_name: String, args: Dictionary = {}):
 	log_signal(signal_name, "local", args)

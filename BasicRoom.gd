@@ -68,12 +68,12 @@ func players_nearby(rooms_away: int) -> bool:
 func _on_area_3d_body_entered(body):
 	if body is Barbarian:
 		
-		current_players[body.player_id] = null
+		current_players[body.id] = null
 		$Timer.stop()
 		timed_out = false
 		
 		Events.emit("player_entered_room", {
-			"player_id": body.player_id,
+			"player_id": body.id,
 			"room_id": room_id,
 			"distance": position.length(),
 		})
@@ -82,11 +82,11 @@ func _on_area_3d_body_entered(body):
 func _on_area_3d_body_exited(body):
 	if body is Barbarian:
 		
-		current_players.erase(body.player_id)
+		current_players.erase(body.id)
 		$Timer.start()
 		
 		Events.emit("player_exited_room", {
-			"player_id": body.player_id,
+			"player_id": body.id,
 			"room_id": room_id,
 		})
 

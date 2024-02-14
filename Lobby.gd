@@ -21,14 +21,15 @@ var player_info = {"name": "", "status": "unknown"}
 var players_loaded_into_game = 0
 
 
-
 func _ready():
 	#multiplayer.peer_connected.connect(_on_player_connected)
 	multiplayer.peer_disconnected.connect(_on_player_disconnected)
 	multiplayer.connected_to_server.connect(_on_connected_to_server_ok)
 	multiplayer.connection_failed.connect(_on_connected_fail)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
+	multiplayer.multiplayer_peer = null
 	Events.lobby_players_updated.connect(_on_lobby_players_updated)
+	Events.lobby_start_game.connect(_on_lobby_start_game)
 
 # both
 
@@ -63,11 +64,15 @@ func player_loaded_into_game():
 			players_loaded_into_game = 0
 
 
+func _on_lobby_start_game(_d):
+	get_tree().change_scene_to_file("res://TheMaze.tscn")
+
+
 func _on_connected_to_server_ok():
 	update_my_player_info(player_info)
 	
 func update_my_player_info(updated_player_info):
-	if multiplayer.is_server():
+	if is_host():
 		players[1] = updated_player_info
 		Events.emit("lobby_players_updated", players)
 	else:
@@ -113,3 +118,5 @@ func load_game(game_scene_path):
 	get_tree().change_scene_to_file(game_scene_path)
 
 
+func is_host():
+	return not multiplayer.has_multiplayer_peer() or multiplayer.is_server()

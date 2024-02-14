@@ -34,6 +34,10 @@ text = "Host"
 layout_mode = 2
 text = "Join"
 
+[node name="LocalButton" type="Button" parent="GameLaunchMenu/VBoxContainer"]
+layout_mode = 2
+text = "Local"
+
 [node name="HSeparator" type="HSeparator" parent="GameLaunchMenu/VBoxContainer"]
 layout_mode = 2
 
@@ -205,6 +209,7 @@ text = "Back"
 
 [connection signal="pressed" from="GameLaunchMenu/VBoxContainer/HostButton" to="." method="_on_game_launch_host_button_pressed"]
 [connection signal="pressed" from="GameLaunchMenu/VBoxContainer/JoinButton" to="." method="_on_game_launched_join_button_pressed"]
+[connection signal="pressed" from="GameLaunchMenu/VBoxContainer/LocalButton" to="." method="_on_game_launched_local_button_pressed"]
 [connection signal="pressed" from="GameLaunchMenu/VBoxContainer/ExitButton" to="." method="_on_exit_button_pressed"]
 [connection signal="text_changed" from="HostMenu/VBoxContainer/PlayerNameContainer/LineEdit" to="." method="_on_player_name_changed"]
 [connection signal="pressed" from="HostMenu/VBoxContainer/HostButton" to="." method="_on_host_host_button_pressed"]
@@ -213,4 +218,5 @@ text = "Back"
 [connection signal="pressed" from="JoinMenu/VBoxContainer/JoinButton" to="." method="_on_join_join_button_pressed"]
 [connection signal="pressed" from="JoinMenu/VBoxContainer/BackButton" to="." method="_on_join_back_button_pressed"]
 [connection signal="pressed" from="LobbyMenu/HBoxContainer/ControlsContainer/CenterContainer/VBoxContainer/ReadyButton" to="." method="_on_ready_button_pressed"]
+[connection signal="pressed" from="LobbyMenu/HBoxContainer/ControlsContainer/CenterContainer/VBoxContainer/StartButton" to="." method="_on_lobby_start_button_pressed"]
 [connection signal="pressed" from="LobbyMenu/HBoxContainer/ControlsContainer/CenterContainer/VBoxContainer/BackButton" to="." method="_on_lobby_back_button_pressed"]

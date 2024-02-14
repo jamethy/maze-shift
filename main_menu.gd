@@ -48,6 +48,10 @@ func _on_game_launched_join_button_pressed():
 	show_join_menu()
 
 
+func _on_game_launched_local_button_pressed():
+	Lobby.players[1] = Lobby.player_info
+	Events.emit("lobby_start_game")
+
 func _on_exit_button_pressed():
 	get_tree().quit()
 
@@ -128,3 +132,7 @@ func _on_lobby_back_button_pressed():
 	else:
 		show_join_menu()
 	Lobby.disconnect_from_server()
+
+
+func _on_lobby_start_button_pressed():
+	Events.emit("lobby_start_game")

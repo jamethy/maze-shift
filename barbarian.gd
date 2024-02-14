@@ -26,13 +26,19 @@ var attacks = [
 @onready var anim_state = $AnimationTree.get("parameters/playback")
 
 func _ready():
-	Events.player_entered_room.connect(on_player_entered_room)
+	if Lobby.is_host():
+		Events.player_entered_room.connect(on_player_entered_room)
+	if multiplayer.multiplayer_peer == null or is_multiplayer_authority():
+		$SpringArm3D/Camera3D.current = true
 
 func on_player_entered_room(d: Dictionary):
 	if d["player_id"] == id:
 		current_room_id = d["room_id"]
 
 func _physics_process(delta: float):
+	if multiplayer.multiplayer_peer != null and not is_multiplayer_authority():
+		return
+	
 	velocity.y -= gravity * delta
 	get_move_input(delta)
 	
@@ -66,9 +72,12 @@ func get_move_input(delta: float):
 	velocity.y = vy
 
 func _unhandled_input(event):
+	if multiplayer.multiplayer_peer != null and not is_multiplayer_authority():
+		return
 	if event is InputEventMouseMotion:
 		spring_arm.rotation.x -= event.relative.y * mouse_sensitivity
 		spring_arm.rotation_degrees.x = clamp(spring_arm.rotation_degrees.x, -90, 30)
 		spring_arm.rotation.y -= event.relative.x * mouse_sensitivity
 	if event.is_action_pressed("attack"):
+		# TODO networking
 		anim_state.travel(attacks.pick_random())
