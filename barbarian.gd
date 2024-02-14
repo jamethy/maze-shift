@@ -1,6 +1,8 @@
 extends CharacterBody3D
 class_name Barbarian
 
+# https://github.com/finepointcgi/Godot-4-Multiplayer-Lan-Tutorial/blob/main/player.gd
+
 @export var speed = 10.0
 @export var acceleration = 4.0
 @export var jump_speed = 8.0
