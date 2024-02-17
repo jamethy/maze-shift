@@ -15,10 +15,19 @@ signal lobby_players_updated(dict)
 
 signal server_disconnected(dict)
 
-signal lobby_start_game(dict)
+signal started_game_from_lobby(dict)
+
+# player_id
+signal loaded_into_game(dict)
+
+signal all_players_loaded_game(dict)
 
 # player_id, move
 signal player_attacked(dict)
+
+signal room_added(dict)
+
+signal hallway_added(dict)
 
 func emit(signal_name: String, args: Dictionary = {}):
 	if multiplayer.has_multiplayer_peer():
@@ -36,5 +45,6 @@ func _emit_signal(signal_name: String, args: Dictionary):
 	emit_signal(signal_name, args)
 
 func log_signal(signal_name: String, type: String, args: Dictionary):
-	print("signal(%s): %s " % [type, signal_name], args)
+	var player_id = "%9d" % Lobby.get_my_id()
+	print("signal(%s,%s): %s " % [type, player_id, signal_name], args)
 

@@ -50,7 +50,7 @@ func _on_game_launched_join_button_pressed():
 
 func _on_game_launched_local_button_pressed():
 	Lobby.players[0] = Lobby.player_info
-	Events.emit("lobby_start_game")
+	Events.emit("started_game_from_lobby")
 
 func _on_exit_button_pressed():
 	get_tree().quit()
@@ -135,4 +135,4 @@ func _on_lobby_back_button_pressed():
 
 
 func _on_lobby_start_button_pressed():
-	Events.emit("lobby_start_game")
+	Events.emit("started_game_from_lobby")

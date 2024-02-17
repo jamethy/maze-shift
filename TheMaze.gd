@@ -15,20 +15,33 @@ var starting_room: BasicRoom
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
-	add_room(0, 0)
+	
+	add_room(room_id_counter, 0, 0)
+	room_id_counter += 1
 	
 	if Lobby.is_host():
 		Events.player_entered_hallway.connect(on_player_entered_hallway)
 		Events.player_entered_room.connect(on_player_entered_room)
+		Events.all_players_loaded_game.connect(_on_all_players_loaded_game)
+	else:
+		Events.room_added.connect(_on_server_added_room)
+		Events.hallway_added.connect(_on_server_added_hallway)
 	Events.lobby_players_updated.connect(_on_lobby_players_updated)
 	
 	var initial_distance = 5
-	starting_room = add_room(initial_distance * room_w, initial_distance * room_w)
+	starting_room = add_room(room_id_counter, initial_distance * room_w, initial_distance * room_w)
+	room_id_counter += 1
 	for player_id in Lobby.players:
 		add_player(player_id, Lobby.players[player_id])
 	
-	start_game()
+	Events.emit("loaded_into_game", { "player_id": Lobby.get_my_id() })
+		
 
+func start_game():
+	add_rooms(starting_room)
+
+func _on_all_players_loaded_game(_d: Dictionary):
+	start_game()
 
 func _on_lobby_players_updated(players: Dictionary):
 	for player_id in players:
@@ -51,11 +64,8 @@ func add_player(id: int, _player_info: Dictionary):
 	b.set_multiplayer_authority(id)
 	add_child(b)
 	
-
-func start_game():
-	add_rooms(starting_room)
 	
-
+# server only
 func add_rooms(r: BasicRoom):
 	print("adding rooms to room ", r.room_id)
 	var options = []
@@ -90,23 +100,43 @@ func add_rooms(r: BasicRoom):
 				can_go_right = false
 		
 		var dir = left_dir if can_go_left else right_dir
+		
+		var room_id = room_id_counter
+		room_id_counter += 1
 		var room = add_room(
+			room_id,
 			r.position.x + room_w * dir.x,
 			r.position.z + room_w * dir.z,
 		)
+		Events.emit("room_added", {
+			"id": room_id,
+			"x": room.position.x,
+			"z": room.position.z,
+		})
+		
+		var hallway_id = hallway_id_counter
+		hallway_id_counter += 1
 		var hallway = add_hallway(
+			hallway_id,
 			r.position.x + room_w * out_dir.x,
 			r.position.z + room_w * out_dir.z,
 		)
 		hallway.look_at(hallway.position + out_dir) # points -Z toward point - right turn
 		if can_go_left:
 			hallway.rotation.y -= PI/2
+		Events.emit("hallway_added", {
+			"id": hallway_id,
+			"x": hallway.position.x,
+			"z": hallway.position.z,
+			"rotation.y": hallway.rotation.y,
+			"room_a_id": r.room_id,
+			"room_b_id": room.room_id,
+		})
 		
 		r.connect_hallway(hallway)
 		room.connect_hallway(hallway)
 		hallway.room_a = r
 		hallway.room_b = room
-
 
 
 func can_place_hallway(r, dx, dz):
@@ -134,21 +164,27 @@ func get_map_at(x, z):
 		return null
 	return maze_map[xi][zi]
 
+func _on_server_added_room(d):
+	add_room(d["id"], d["x"], d["z"])
 
-func add_room(x, z):
+func add_room(id: int, x: float, z: float):
 	var xi = roundi(x)
 	var zi = roundi(z)
 	if xi not in maze_map:
 		maze_map[xi] = {}
 	
 	if zi in maze_map[xi]:
-		print("already a room here ", x, ", ", z)
-		return maze_map[xi][zi]
+		var existing = maze_map[xi][zi]
+		print("already a something here ", {
+			"x": xi,
+			"z": zi,
+			"name": existing.name,
+		})
+		return existing  # hope it's a room
 	
 	var room = basic_room_scene.instantiate()
-	room.name = 'Room%d' % room_id_counter
-	room.room_id = room_id_counter
-	room_id_counter += 1
+	room.name = 'Room%d' % id
+	room.room_id = id
 	room.position.x = x
 	room.position.z = z
 	maze_map[xi][zi] = room
@@ -156,7 +192,6 @@ func add_room(x, z):
 	return room
 
 func remove_room(room: BasicRoom):
-	print("removing room ", room.room_id)
 	for x in maze_map.values():
 		for n in x.values():
 			if n is Hallway and (n.room_a == room or n.room_b == room):
@@ -173,20 +208,35 @@ func remove_from_maze_map(x, z):
 	if xi not in maze_map:
 		return
 	maze_map[xi].erase(zi)
+	
+func _on_server_added_hallway(d):
+	var hallway = add_hallway(d["id"], d["x"], d["z"])
+	hallway.rotation.y = d["rotation.y"]
+	var room_a = get_node("Room%d" % d["room_a_id"])
+	var room_b = get_node("Room%d" % d["room_b_id"])
+	room_a.connect_hallway(hallway)
+	room_b.connect_hallway(hallway)
+	hallway.room_a = room_a
+	hallway.room_b = room_b
+	
 
-func add_hallway(x, z):
+func add_hallway(id: int, x: float, z: float):
 	var xi = roundi(x)
 	var zi = roundi(z)
 	if xi not in maze_map:
 		maze_map[xi] = {}
 	
 	if zi in maze_map[xi]:
-		print("already a something here ", x, ", ", z)
-		return
+		var existing = maze_map[xi][zi]
+		print("already a something here ", {
+			"x": xi,
+			"z": zi,
+			"name": existing.name,
+		})
+		return existing  # hope it's a hallway
 	
 	var hallway = hallway_scene.instantiate()
-	hallway.hallway_id = hallway_id_counter
-	hallway_id_counter += 1
+	hallway.hallway_id = id
 	hallway.name = "Hallway%d" % hallway.hallway_id
 	hallway.position.x = x
 	hallway.position.z = z
