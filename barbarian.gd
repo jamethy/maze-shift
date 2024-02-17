@@ -68,7 +68,7 @@ func _physics_process(delta: float):
 		anim_tree.set("parameters/conditions/jumping", false)
 		anim_tree.set("parameters/conditions/grounded", true)
 	if not is_on_floor() and not jumping:
-		anim_state.travel("Jump_Idle")
+		anim_tree.set("parameters/conditions/jumping", true)
 		anim_tree.set("parameters/conditions/grounded", false)
 	last_floor = is_on_floor()
 
