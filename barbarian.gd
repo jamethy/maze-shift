@@ -5,9 +5,19 @@ class_name Barbarian
 
 @export var speed = 10.0
 @export var acceleration = 10.0
-@export var jump_speed = 8.0
 @export var rotation_speed = 12.0
 @export var mouse_sensitivity = 0.0015
+
+@export var jump_height: float = 2.4
+@export var jump_time_to_peak: float = 0.35
+@export var jump_time_to_descent: float = 0.25
+
+@onready var jump_velocity: float = (2*jump_height) / jump_time_to_peak
+@onready var jump_gravity: float = (2*jump_height) / (jump_time_to_peak * jump_time_to_peak)
+@onready var fall_gravity: float = (2*jump_height) / (jump_time_to_descent * jump_time_to_descent)
+
+func get_player_gravity():
+	return jump_gravity if velocity.y > 0 else fall_gravity
 
 var id: int = 1
 var current_room_id: int = 0
@@ -42,14 +52,14 @@ func _physics_process(delta: float):
 	if multiplayer.multiplayer_peer != null and not is_multiplayer_authority():
 		return
 	
-	velocity.y -= gravity * delta
+	velocity.y -= get_player_gravity() * delta
 	get_move_input(delta)
 	
 	move_and_slide()
 	if velocity.length() > 1.0:
 		model.rotation.y = lerp_angle(model.rotation.y, spring_arm.rotation.y, rotation_speed * delta)
 	if is_on_floor() and Input.is_action_just_pressed("jump"):
-		velocity.y = jump_speed
+		velocity.y = jump_velocity
 		jumping = true
 		anim_tree.set("parameters/conditions/jumping", true)
 		anim_tree.set("parameters/conditions/grounded", false)

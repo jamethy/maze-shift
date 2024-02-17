@@ -4,7 +4,7 @@ extends Node
 
 # copied from https://docs.godotengine.org/en/stable/tutorials/networking/high_level_multiplayer.html
 
-const PORT = 7000
+const DEFAULT_PORT = 7000
 const DEFAULT_SERVER_IP = "127.0.0.1" # IPv4 localhost
 const MAX_CONNECTIONS = 20
 
@@ -31,6 +31,7 @@ func _ready():
 	Events.started_game_from_lobby.connect(_on_started_game_from_lobby)
 	Events.loaded_into_game.connect(_on_loaded_into_game)
 
+
 func _on_loaded_into_game(d: Dictionary):
 	players[d["player_id"]]["status"] = "in_game"
 	print({
@@ -45,7 +46,7 @@ func _on_loaded_into_game(d: Dictionary):
 				break
 		if all_players_in:
 			Events.emit("all_players_loaded_game")
-			
+
 
 # both
 
@@ -80,7 +81,7 @@ func join_game(address = ""):
 	if address.is_empty():
 		address = DEFAULT_SERVER_IP
 	var peer = ENetMultiplayerPeer.new()
-	var error = peer.create_client(address, PORT)
+	var error = peer.create_client(address, DEFAULT_PORT)
 	if error:
 		return error
 	multiplayer.multiplayer_peer = peer
@@ -126,7 +127,7 @@ func _on_server_disconnected():
 
 func start_server():
 	var peer = ENetMultiplayerPeer.new()
-	var error = peer.create_server(PORT, MAX_CONNECTIONS)
+	var error = peer.create_server(DEFAULT_PORT, MAX_CONNECTIONS)
 	if error:
 		return error
 	multiplayer.multiplayer_peer = peer
