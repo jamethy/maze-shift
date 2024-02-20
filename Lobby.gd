@@ -26,7 +26,7 @@ func _ready():
 	multiplayer.connected_to_server.connect(_on_connected_to_server_ok)
 	multiplayer.connection_failed.connect(_on_connected_fail)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
-	multiplayer.multiplayer_peer = null
+	multiplayer.multiplayer_peer = OfflineMultiplayerPeer.new()
 	Events.lobby_players_updated.connect(_on_lobby_players_updated)
 	Events.started_game_from_lobby.connect(_on_started_game_from_lobby)
 	Events.loaded_into_game.connect(_on_loaded_into_game)
@@ -34,11 +34,7 @@ func _ready():
 
 func _on_loaded_into_game(d: Dictionary):
 	players[d["player_id"]]["status"] = "in_game"
-	print({
-		"players": players,
-		"is_host": is_host(),
-	})
-	if is_host():
+	if multiplayer.is_server():
 		var all_players_in = true
 		for player_id in players:
 			if players[player_id]["status"] != "in_game": # TODO handle disconnected
@@ -96,9 +92,8 @@ func _on_connected_to_server_ok():
 	update_my_player_info(player_info)
 	
 func update_my_player_info(updated_player_info):
-	if is_host():
-		var player_id = 1 if multiplayer.has_multiplayer_peer() else 0
-		players[player_id] = updated_player_info
+	if multiplayer.is_server():
+		players[multiplayer.get_unique_id()] = updated_player_info
 		Events.emit("lobby_players_updated", players)
 	else:
 		_update_my_player_info.rpc_id(1, updated_player_info)
@@ -141,9 +136,3 @@ func start_server():
 @rpc("call_local", "reliable")
 func load_game(game_scene_path):
 	get_tree().change_scene_to_file(game_scene_path)
-
-func get_my_id():
-	return multiplayer.get_unique_id() if multiplayer.has_multiplayer_peer() else 0
-
-func is_host():
-	return not multiplayer.has_multiplayer_peer() or multiplayer.is_server()

@@ -6,5 +6,5 @@ func _ready():
 
 
 func on_player_entered_room(d: Dictionary):
-	if d["player_id"] == Lobby.get_my_id():
+	if d["player_id"] == multiplayer.get_unique_id():
 		set_text("Dist: %0.1fm" % d["distance"])

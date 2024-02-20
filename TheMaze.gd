@@ -13,13 +13,12 @@ var hallway_id_counter: int = 1
 var starting_room: BasicRoom
 
 func _ready():
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
 	
 	add_room(room_id_counter, 0, 0)
 	room_id_counter += 1
 	
-	if Lobby.is_host():
+	if multiplayer.is_server():
 		Events.player_entered_hallway.connect(on_player_entered_hallway)
 		Events.player_entered_room.connect(on_player_entered_room)
 		Events.all_players_loaded_game.connect(_on_all_players_loaded_game)
@@ -34,7 +33,7 @@ func _ready():
 	for player_id in Lobby.players:
 		add_player(player_id, Lobby.players[player_id])
 	
-	Events.emit("loaded_into_game", { "player_id": Lobby.get_my_id() })
+	Events.emit("loaded_into_game", { "player_id": multiplayer.get_unique_id() })
 		
 
 func start_game():

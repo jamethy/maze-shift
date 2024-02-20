@@ -38,7 +38,9 @@ var attacks = [
 @onready var anim_state = $AnimationTree.get("parameters/playback")
 
 func _ready():
-	if Lobby.is_host():
+	if multiplayer.multiplayer_peer == null or is_multiplayer_authority():
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	if multiplayer.is_server():
 		Events.player_entered_room.connect(on_player_entered_room)
 	Events.player_attacked.connect(_on_player_attacked)
 	if multiplayer.multiplayer_peer == null or is_multiplayer_authority():
@@ -93,7 +95,7 @@ func _unhandled_input(event):
 		spring_arm.rotation.y -= event.relative.x * mouse_sensitivity
 	if event.is_action_pressed("attack"):
 		Events.emit("player_attacked", {
-			"player_id": Lobby.get_my_id(),
+			"player_id": multiplayer.get_unique_id(),
 			"move": attacks.pick_random(),
 		})
 		
