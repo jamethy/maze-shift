@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://divxvn8s22p81"]
+[gd_scene load_steps=9 format=3 uid="uid://divxvn8s22p81"]
 
 [ext_resource type="Script" path="res://TheMaze.gd" id="1_asx5x"]
 [ext_resource type="PackedScene" uid="uid://cg6i26ku8bf33" path="res://KayKit_DungeonRemastered_1.0_FREE/Assets/gltf/chest.glb" id="3_qjf3w"]
@@ -23,6 +23,11 @@ size = Vector3(100, 0.01, 100)
 
 [sub_resource type="LabelSettings" id="LabelSettings_3y3ew"]
 font_size = 100
+
+[sub_resource type="Environment" id="Environment_0qruf"]
+background_mode = 1
+background_color = Color(0.854902, 0.854902, 0.854902, 1)
+ambient_light_energy = 4.7
 
 [node name="TheMaze" type="Node3D"]
 script = ExtResource("1_asx5x")
@@ -58,3 +63,20 @@ offset_bottom = 97.0
 text = "Dist: --"
 label_settings = SubResource("LabelSettings_3y3ew")
 script = ExtResource("4_7qm05")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+custom_minimum_size = Vector2(100, 100)
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+gui_disable_input = true
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 100, 0)
+environment = SubResource("Environment_0qruf")
+projection = 1
+current = true
+size = 200.0

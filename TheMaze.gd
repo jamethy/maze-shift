@@ -34,7 +34,8 @@ func _ready():
 		add_player(player_id, Lobby.players[player_id])
 	
 	Events.emit("loaded_into_game", { "player_id": multiplayer.get_unique_id() })
-		
+	
+	$SubViewportContainer/SubViewport.world_3d = get_viewport().world_3d
 
 func start_game():
 	add_rooms(starting_room)
