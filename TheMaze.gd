@@ -276,3 +276,10 @@ func on_player_entered_room(_d: Dictionary):
 
 		if not room.players_nearby(1):
 			remove_room(room)
+
+
+func _unhandled_input(event):
+	if multiplayer.multiplayer_peer != null and not is_multiplayer_authority():
+		return
+	if event.is_action_pressed("minimap"):
+		$SubViewportContainer.visible = not $SubViewportContainer.visible
