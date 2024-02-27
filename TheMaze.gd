@@ -192,6 +192,8 @@ func add_room(id: int, x: float, z: float):
 	return room
 
 func remove_room(room: BasicRoom):
+	if room.room_id == 1:
+		return
 	for x in maze_map.values():
 		for n in x.values():
 			if n is Hallway and (n.room_a == room or n.room_b == room):
