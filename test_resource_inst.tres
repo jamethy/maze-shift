@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="TestResource" load_steps=2 format=3 uid="uid://c1sibolprysyy"]
+
+[ext_resource type="Script" path="res://test_resource.gd" id="1_wfdq1"]
+
+[resource]
+script = ExtResource("1_wfdq1")
+my_string = 8
