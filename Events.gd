@@ -47,4 +47,3 @@ func _emit_signal(signal_name: String, args: Dictionary):
 func log_signal(signal_name: String, type: String, args: Dictionary):
 	var player_id = "%9d" % multiplayer.get_unique_id()
 	print("signal(%s,%s): %s " % [type, player_id, signal_name], args)
-
