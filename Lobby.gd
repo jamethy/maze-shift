@@ -56,7 +56,7 @@ func _on_player_connected(id):
 
 @rpc("authority", "call_remote", "reliable")
 func _receive_joining_server_info(info: Dictionary):
-	game_status = info["game_status"]
+	game_status = info.get("game_status", "unknown")
 	players = info["players"]
 	Events.local_emit("lobby_players_updated", players)
 	if game_status in ["loading_in", "game_started"]:

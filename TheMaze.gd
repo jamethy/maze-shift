@@ -223,6 +223,7 @@ func _on_server_added_hallway(d):
 	
 
 func add_hallway(id: int, x: float, z: float):
+	
 	var xi = roundi(x)
 	var zi = roundi(z)
 	if xi not in maze_map:
